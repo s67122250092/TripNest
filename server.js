@@ -1,62 +1,115 @@
 const express = require('express');
 const path = require('path');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-const hotels = [
-  {"id":1,"name":"Woodstory Boutique Hotel","type":"Boutique Hotel","price":1200,"rating":9.0,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_001_thumb.webp","tags":["โรงแรมบูทีค","ห้วยขวาง"],"code":"H001"},
-  {"id":2,"name":"X9Hostel","type":"Hostel","price":1100,"rating":9.0,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_002_thumb.webp","tags":["โฮสเทล","ห้องพักรวม","ห้วยขวาง"],"code":"H002"},
-  {"id":3,"name":"Neveu Premier Residence Ratchada","type":"Apartment","price":3500,"rating":9.0,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_003_thumb.webp","tags":["เรสซิเดนซ์","รัชดา","ห้วยขวาง"],"code":"H003"},
-  {"id":4,"name":"Tiva Residence Bangkok","type":"Residence","price":1900,"rating":9.6,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_004_thumb.webp","tags":["เรสซิเดนซ์","ห้วยขวาง"],"code":"H004"},
-  {"id":5,"name":"Sweet Stay","type":"Apartment","price":2000,"rating":9.0,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_005_thumb.webp","tags":["อพาร์ตเมนต์","ห้วยขวาง"],"code":"H005"},
-  {"id":6,"name":"I-House Laguna Garden RCA","type":"Condominium","price":1200,"rating":9.7,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_006_thumb.webp","tags":["คอนโด","RCA","ห้วยขวาง"],"code":"H006"},
-  {"id":7,"name":"Siamese Residence Rama 9","type":"Residence","price":3300,"rating":9.1,"area":"พระราม 9 กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_007_thumb.webp","tags":["พระราม 9","สระว่ายน้ำ","ห้วยขวาง"],"code":"H007"},
-  {"id":8,"name":"Ranana Bangkok","type":"Hotel","price":1200,"rating":9.0,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_008_thumb.webp","tags":["โรงแรม","ห้วยขวาง"],"code":"H008"},
-  {"id":9,"name":"Artisan Ratchada Condo","type":"Condominium","price":2400,"rating":9.1,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_009_thumb.webp","tags":["คอนโด","รัชดา","สระว่ายน้ำ"],"code":"H009"},
-  {"id":10,"name":"Homies Ratchada Hotel","type":"Hotel","price":2200,"rating":9.1,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_010_thumb.webp","tags":["โรงแรม","รัชดา","Wi-Fi"],"code":"H010"},
-  {"id":11,"name":"Holiday Inn Express Bangkok Soi Soonvijai","type":"Hotel","price":2500,"rating":8.3,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_011_thumb.webp","tags":["ใกล้โรงพยาบาลกรุงเทพ","อาหารเช้า"],"code":"H011"},
-  {"id":12,"name":"Grand Mercure Bangkok Atrium","type":"Hotel","price":2800,"rating":8.0,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_012_thumb.webp","tags":["โรงแรม","สระว่ายน้ำ","รัชดา"],"code":"H012"},
-  {"id":13,"name":"Somerset Rama 9 Bangkok","type":"Apartment","price":3100,"rating":8.6,"area":"พระราม 9 กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_013_thumb.webp","tags":["เซอร์วิสอพาร์ตเมนต์","พระราม 9"],"code":"H013"},
-  {"id":14,"name":"Kokotel Bangkok Dheva Thonglor","type":"Hotel","price":1800,"rating":8.3,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_014_thumb.webp","tags":["โรงแรม","ครอบครัว","อาหารเช้า"],"code":"H014"},
-  {"id":15,"name":"Lancaster Bangkok","type":"Hotel","price":3600,"rating":8.9,"area":"มักกะสัน กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_015_thumb.webp","tags":["โรงแรม","พรีเมียม","มักกะสัน"],"code":"H015"},
-  {"id":16,"name":"Cassia Rama 9 Bangkok","type":"Apartment","price":2800,"rating":8.4,"area":"พระราม 9 กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_016_thumb.webp","tags":["พระราม 9","สระว่ายน้ำ","วิวเมือง"],"code":"H016"},
-  {"id":17,"name":"Maitria Hotel Rama 9 Bangkok","type":"Hotel","price":2600,"rating":8.7,"area":"พระราม 9 กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_017_thumb.webp","tags":["โรงแรม","พระราม 9","อาหารเช้า"],"code":"H017"},
-  {"id":18,"name":"Graph Hotels Bangkok","type":"Hotel","price":2100,"rating":8.4,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_018_thumb.webp","tags":["โรงแรม","ย่านธุรกิจ","รัชดา"],"code":"H018"},
-  {"id":19,"name":"S Ratchada Leisure Hotel","type":"Hotel","price":1700,"rating":8.0,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_019_thumb.webp","tags":["โรงแรม","รัชดา","สระว่ายน้ำ"],"code":"H019"},
-  {"id":20,"name":"ibis Styles Bangkok Ratchada","type":"Hotel","price":1600,"rating":8.2,"area":"รัชดา กรุงเทพฯ","distance":"ใกล้ MRT","image":"/images/thumbnail_webp/hotel_020_thumb.webp","tags":["ใกล้ MRT","โรงแรม","รัชดา"],"code":"H020"},
-  {"id":21,"name":"Amaranta Hotel","type":"Hotel","price":2200,"rating":8.2,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_021_thumb.webp","tags":["โรงแรม","ดาดฟ้า","รัชดา"],"code":"H021"},
-  {"id":22,"name":"MeStyle Garage Hotel","type":"Hotel","price":1500,"rating":8.6,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_022_thumb.webp","tags":["โรงแรม","Wi-Fi","ห้วยขวาง"],"code":"H022"},
-  {"id":23,"name":"CMYK Boutique Hotel","type":"Boutique Hotel","price":1800,"rating":8.3,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ใกล้ MRT ห้วยขวาง","image":"/images/thumbnail_webp/hotel_023_thumb.webp","tags":["ใกล้ MRT ห้วยขวาง","โรงแรมบูทีค"],"code":"H023"},
-  {"id":24,"name":"Nest by Sangob","type":"Hotel","price":1000,"rating":8.1,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_024_thumb.webp","tags":["โรงแรม","สระว่ายน้ำ","ห้วยขวาง"],"code":"H024"},
-  {"id":25,"name":"Happihaus Hotel Bangkok","type":"Hotel","price":1500,"rating":8.2,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_025_thumb.webp","tags":["โรงแรม","ใกล้โรงพยาบาล"],"code":"H025"},
-  {"id":26,"name":"Praso@Ratchada12","type":"Hotel","price":1400,"rating":8.0,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ใกล้ MRT ห้วยขวาง","image":"/images/thumbnail_webp/hotel_026_thumb.webp","tags":["ใกล้ MRT ห้วยขวาง","สระว่ายน้ำ"],"code":"H026"},
-  {"id":27,"name":"Atrium Boutique Hotel","type":"Boutique Hotel","price":1400,"rating":8.0,"area":"รัชดา กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_027_thumb.webp","tags":["โรงแรมบูทีค","รัชดา","สระว่ายน้ำ"],"code":"H027"},
-  {"id":28,"name":"Amp Am House Bangkok Hotel","type":"Hotel","price":2000,"rating":8.6,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_028_thumb.webp","tags":["โรงแรม","Wi-Fi","ที่จอดรถ"],"code":"H028"},
-  {"id":29,"name":"Double Bed Hotel","type":"Hotel","price":900,"rating":8.8,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_029_thumb.webp","tags":["โรงแรม","ห้องอาหาร","ห้วยขวาง"],"code":"H029"},
-  {"id":30,"name":"MeStyle Place Hotel","type":"Hotel","price":2200,"rating":8.2,"area":"ห้วยขวาง กรุงเทพฯ","distance":"ย่านห้วยขวาง","image":"/images/thumbnail_webp/hotel_030_thumb.webp","tags":["โรงแรม","สระว่ายน้ำ","ห้วยขวาง"],"code":"H030"}
-];
+const FIREBASE_DATABASE_URL =
+  'https://tripnest-f76c9-default-rtdb.asia-southeast1.firebasedatabase.app';
+
+let hotelCache = null;
+let hotelCacheTime = 0;
+
+async function getHotels() {
+  // เก็บข้อมูลไว้ 30 วินาที เพื่อลดการอ่านฐานข้อมูลซ้ำระหว่างค้นหา
+  if (hotelCache && Date.now() - hotelCacheTime < 30_000) {
+    return hotelCache;
+  }
+
+  const response = await fetch(`${FIREBASE_DATABASE_URL}/hotels.json`);
+
+  if (!response.ok) {
+    throw new Error(`Firebase returned ${response.status}`);
+  }
+
+  const data = await response.json();
+
+  hotelCache = Object.entries(data || {})
+    .filter(([, hotel]) => hotel && typeof hotel === 'object')
+    .map(([key, hotel]) => ({
+      ...hotel,
+      id: hotel.id ?? Number(key),
+      tags: Array.isArray(hotel.tags)
+        ? hotel.tags
+        : Object.values(hotel.tags || {}),
+    }));
+
+  hotelCacheTime = Date.now();
+  return hotelCache;
+}
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname,'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/api/hotels',(req,res)=>{
-  let result=[...hotels];
-  const q=(req.query.q||'').toLowerCase();
-  const type=req.query.type||'ทั้งหมด';
-  const max=Number(req.query.max||0);
-  const sort=req.query.sort||'recommended';
-  if(q) result=result.filter(h=>(h.name+' '+h.area+' '+h.distance+' '+h.tags.join(' ')+' '+h.code).toLowerCase().includes(q));
-  if(type!=='ทั้งหมด') result=result.filter(h=>h.type===type);
-  if(max>0) result=result.filter(h=>h.price<=max);
-  if(sort==='priceLow') result.sort((a,b)=>a.price-b.price);
-  if(sort==='priceHigh') result.sort((a,b)=>b.price-a.price);
-  if(sort==='rating') result.sort((a,b)=>b.rating-a.rating);
-  res.json(result);
+app.get('/api/hotels', async (req, res) => {
+  try {
+    let result = await getHotels();
+
+    const q = String(req.query.q || '').toLowerCase();
+    const type = String(req.query.type || 'ทั้งหมด');
+    const max = Number(req.query.max || 0);
+    const sort = String(req.query.sort || 'recommended');
+
+    if (q) {
+      result = result.filter((hotel) => {
+        const searchable = [
+          hotel.name,
+          hotel.area,
+          hotel.distance,
+          hotel.tags.join(' '),
+          hotel.code,
+        ]
+          .filter(Boolean)
+          .join(' ')
+          .toLowerCase();
+
+        return searchable.includes(q);
+      });
+    }
+
+    if (type !== 'ทั้งหมด') {
+      result = result.filter((hotel) => hotel.type === type);
+    }
+
+    if (max > 0) {
+      result = result.filter((hotel) => hotel.price <= max);
+    }
+
+    if (sort === 'priceLow') {
+      result.sort((a, b) => a.price - b.price);
+    } else if (sort === 'priceHigh') {
+      result.sort((a, b) => b.price - a.price);
+    } else if (sort === 'rating') {
+      result.sort((a, b) => b.rating - a.rating);
+    }
+
+    res.json(result);
+  } catch (error) {
+    console.error('Failed to load hotels from Firebase:', error);
+    res.status(502).json({
+      message: 'อ่านข้อมูลที่พักจาก Firebase ไม่สำเร็จ',
+    });
+  }
 });
 
-app.get('/api/hotels/:id',(req,res)=>{
-  const hotel=hotels.find(h=>h.id===Number(req.params.id));
-  hotel ? res.json(hotel) : res.status(404).json({message:'ไม่พบที่พัก'});
+app.get('/api/hotels/:id', async (req, res) => {
+  try {
+    const hotels = await getHotels();
+    const hotel = hotels.find(
+      (item) => Number(item.id) === Number(req.params.id)
+    );
+
+    if (!hotel) {
+      return res.status(404).json({ message: 'ไม่พบที่พัก' });
+    }
+
+    res.json(hotel);
+  } catch (error) {
+    console.error('Failed to load hotel from Firebase:', error);
+    res.status(502).json({
+      message: 'อ่านข้อมูลที่พักจาก Firebase ไม่สำเร็จ',
+    });
+  }
 });
 
 app.listen(PORT, '0.0.0.0', () => {
