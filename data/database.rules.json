@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "hotels": {
+      ".read": true,
+      ".write": false
+    }
+  }
+}
